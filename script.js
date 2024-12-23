@@ -1,5 +1,6 @@
 let isDarkMode = true; // Default to dark mode
 let isGifVisible = false; // To track if the GIF is currently visible
+let isBotResponding = false; // Flag to track if the bot is responding
 
 // Event listeners
 document.getElementById('sendButton').addEventListener('click', sendMessage);
@@ -47,17 +48,17 @@ function toggleMode() {
 
 // Function to send a message
 function sendMessage() {
+    if (isBotResponding) return; // Prevent sending a new message while bot is responding
+
     const userInput = document.getElementById('userInput').value.trim();
     if (userInput === '') return;
 
     displayMessage(userInput, 'user'); // Display user message
     document.getElementById('userInput').value = '';
+    isBotResponding = true; // Set flag to true to prevent sending another message
 
     // Add a typing indicator in the chat
     const typingElement = addTypingIndicator();
-
-    // Prevent sending message if one is already pending
-    if (document.querySelector('.message.bot p')) return; // Check if there's already a bot message pending
 
     fetch('https://proj-c508.onrender.com/chat', {
         method: 'POST',
@@ -71,15 +72,16 @@ function sendMessage() {
         // Remove the typing indicator before displaying the bot's message
         removeTypingIndicator(typingElement);
 
-        // Check if the reply is already shown, prevent duplicate
-        if (!document.querySelector('.message.bot p')) {
-            displayMessage(data.reply, 'bot'); // Display bot's reply
-        }
+        // Display bot's reply
+        displayMessage(data.reply, 'bot');
     })
     .catch(error => {
         console.error('Error:', error);
         removeTypingIndicator(typingElement);
         displayMessage('ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง.', 'bot');
+    })
+    .finally(() => {
+        isBotResponding = false; // Reset the flag when the response is complete
     });
 }
 
