@@ -7,7 +7,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const OPENAI_API_KEY = 'sk-b-MhwqwdxhCOoWll7eDmm7l0S8IM0T_MbUMUZ1LbMfT3BlbkFJcyuiAFO0ur3gIBCY8YMlzuM3XLU8xtNZmpGnX8WlAA';
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // Initialize the conversation history with the system message
 let conversationHistory = [
