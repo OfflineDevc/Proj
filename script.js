@@ -56,6 +56,9 @@ function sendMessage() {
     // Add a typing indicator in the chat
     const typingElement = addTypingIndicator();
 
+    // Prevent sending message if one is already pending
+    if (document.querySelector('.message.bot p')) return; // Check if there's already a bot message pending
+
     fetch('https://proj-c508.onrender.com/chat', {
         method: 'POST',
         headers: {
