@@ -74,7 +74,7 @@ function sendMessage() {
         removeTypingIndicator(typingElement);
         isBotResponding = false; // Reset the flag
 
-        // Display bot's reply
+        // Display bot's reply without typing effect
         displayMessage(data.reply, 'bot');
     })
     .catch(error => {
@@ -109,21 +109,6 @@ function displayMessage(message, sender) {
     messageElement.appendChild(messageText);
     messagesContainer.appendChild(messageElement);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-    // Apply typing effect only if it's a bot message
-    if (sender === 'bot') {
-        // Typing effect
-        let i = 0;
-        const speed = 25; // Speed of typing effect
-        function type() {
-            if (i < message.length) {
-                messageText.innerHTML += message[i];
-                i++;
-                setTimeout(type, speed);
-            }
-        }
-        type();
-    }
 }
 
 // Function to add a typing indicator
