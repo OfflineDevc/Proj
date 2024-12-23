@@ -69,19 +69,21 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
+        if (!isBotResponding) return; // If a response already exists, don't process again
         // Remove the typing indicator before displaying the bot's message
         removeTypingIndicator(typingElement);
+        isBotResponding = false; // Reset the flag
 
         // Display bot's reply
         displayMessage(data.reply, 'bot');
     })
     .catch(error => {
+        if (!isBotResponding) return; // If a response already exists, don't process again
         console.error('Error:', error);
         removeTypingIndicator(typingElement);
+        isBotResponding = false; // Reset the flag
+
         displayMessage('ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง.', 'bot');
-    })
-    .finally(() => {
-        isBotResponding = false; // Reset the flag when the response is complete
     });
 }
 
