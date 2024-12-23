@@ -56,7 +56,7 @@ function sendMessage() {
     // Add a typing indicator in the chat
     const typingElement = addTypingIndicator();
 
-    fetch('http://localhost:3000/chat', {
+    fetch('https://proj-c508.onrender.com/chat', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -106,7 +106,7 @@ function displayMessage(message, sender) {
         const speed = 25; // Speed of typing effect
         function type() {
             if (i < message.length) {
-                messageText.innerHTML[i] ;
+                messageText.innerHTML += message[i];
                 i++;
                 setTimeout(type, speed);
             }
@@ -142,6 +142,7 @@ function removeTypingIndicator(typingElement) {
 
 // Add event listener to the cat image for toggling mode
 document.querySelector('.cat-img').addEventListener('click', toggleMode);
+
 // Get elements
 const feedbackButton = document.getElementById('feedbackButton');
 const modal = document.createElement('div');
