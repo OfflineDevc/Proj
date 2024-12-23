@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Adviser Chatbot</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e; /* Dark background */
+            color: #f4f4f4; /* Light text color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+        }
+
+        .chat-wrapper {
+            display: flex;
+            align-items: flex-start;
+            max-width: 100%;
+            width: 800px; /* Adjust width as needed */
+            position: relative;
+        }
+
+        .cat-container {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .cat-img {
+            width: 60px; /* Adjust size as needed */
+            height: auto;
+            margin-right: 10px;
+            animation: bounce 1s infinite; /* Apply the bounce animation */
+            cursor: pointer; /* Add cursor pointer for clickable element */
+        }
+
+        .thinking-bubble {
+            position: absolute;
+            top: -50px; /* Adjust position as needed */
+            left: 70px; /* Adjust position to ensure it's not overlapping */
+            width: 150px; /* Adjust width as needed */
+            padding: 10px;
+            background-color: #333; /* Bubble background */
+            border-radius: 10px;
+            color: #f4f4f4; /* Text color */
+            font-size: 0.85em; /* Font size */
+            text-align: center;
+            border: 1px solid #444; /* Darker border */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); /* Optional shadow */
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px); /* Adjust the bounce height */
+            }
+        }
+
+        .chat-container {
+            flex-grow: 1; /* Make sure the chat container takes up remaining space */
+            background-color: #2d2d2d; /* Dark container */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            padding: 10px;
+            background-color: #444;
+            font-family: 'Press Start 2P', cursive;
+            color: #ffcc00; /* Dark yellow */
+            font-size: 2em; /* Adjust font size as needed */
+            border-bottom: 1px solid #555; /* Darker border */
+        }
+
+        .messages {
+            padding: 20px;
+            height: 400px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #444; /* Darker border */
+        }
+
+        .message {
+            margin-bottom: 20px;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.bot {
+            text-align: left;
+        }
+
+        .message p {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 20px;
+            max-width: 80%;
+            margin-bottom: 5px;
+            line-height: 1.6;
+        }
+
+        .message.user p {
+            background-color: #ffcc00; /* Dark yellow */
+            color: #000; /* Dark text for contrast */
+        }
+
+        .message.bot p {
+            background-color: #333; /* Dark background for bot messages */
+            color: #f4f4f4; /* Light text color */
+        }
+
+        .message.user::before {
+            content: "YOU";
+            display: block;
+            font-size: 0.75em; /* Smaller text size */
+            color: #ffcc00; /* Dark yellow for the label */
+            margin-bottom: 5px;
+        }
+
+        .message.bot::before {
+            content: "AI";
+            display: block;
+            font-size: 0.75em; /* Smaller text size */
+            color: #f4f4f4; /* Light text color for the label */
+            margin-bottom: 5px;
+        }
+
+        .input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #333; /* Dark background for input area */
+            border-top: 1px solid #444; /* Darker border */
+        }
+
+        .input-container input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #555; /* Darker border */
+            border-radius: 20px;
+            margin-right: 10px;
+            background-color: #222; /* Dark input background */
+            color: #f4f4f4; /* Light text color */
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            background-color: #ffcc00; /* Dark yellow */
+            color: #000; /* Dark text */
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #e6b800; /* Slightly lighter yellow on hover */
+        }
+
+        /* Styles for bullet points and spacing */
+        .message.bot ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        .message.bot li {
+            margin-bottom: 10px;
+        }
+
+        /* Typing animation */
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            20% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
+
+        .typing-indicator {
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .typing-indicator span {
+            animation: blink 1.4s infinite both;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        /* Light mode styles */
+        .light-mode body {
+            background-color: #f5f5f5; /* Softer light background */
+            color: #333; /* Dark text color */
+        }
+
+        .light-mode .chat-container {
+            background-color: #ffffff; /* Light container */
+            color: #333; /* Dark text color */
+        }
+
+        .light-mode .thinking-bubble {
+            background-color: #e0e0e0; /* Light bubble background */
+            color: #333; /* Dark text color */
+        }
+
+        .light-mode .input-container {
+            background-color: #f5f5f5; /* Softer light background for input area */
+        }
+
+        .light-mode .input-container input {
+            background-color: #ffffff; /* Light input background */
+            color: #333; /* Dark text color */
+        }
+
+        .light-mode .input-container button {
+            background-color: #007bff; /* Softer blue button background */
+            color: #fff; /* Light button text */
+        }
+
+        .light-mode .message.bot p {
+            background-color: #e0e0e0; /* Softer light message background */
+            color: #333; /* Dark text color */
+        }
+
+        .light-mode .message.user p {
+            background-color: #e1f5fe; /* Softer light user message background */
+        }
+        
+        /* Bullet point styles */
+        .bullet-point {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .bullet-point::before {
+            content: '- '; /* Adjust bullet point style */
+            color: #ffcc00; /* Match with your theme */
+        }
+
+        /* Feedback button styles */
+        .feedback-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #ffcc00; /* Dark yellow */
+            color: #000; /* Black text */
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1em;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .feedback-button:hover {
+            background-color: #e6b800; /* Slightly lighter yellow on hover */
+            color: #000; /* Ensure text stays black on hover */
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            max-width: 90%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #000; /* Black text color */
+        }
+
+        .modal-content p {
+            color: #000; /* Black text color */
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-wrapper">
+        <div class="cat-container">
+            <img src="cat.png" alt="Thinking Cat" id="catImage" class="cat-img">
+            <div class="thinking-bubble">
+                StartUPT สวัสดีครับ/ค่ะ
+            </div>
+        </div>
+        <div class="chat-container">
+            <div class="header">StartUPT</div>
+            <div id="messages" class="messages"></div>
+            <div class="input-container">
+                <input id="userInput" type="text" placeholder="Type your message here..." />
+                <button id="sendButton">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="feedbackButton" class="feedback-button">Feedback</div>
+
+    <div id="feedbackModal" class="modal">
+        <div class="modal-content">
+            <h2>Feedback</h2>
+            <p>ส่งการตอบกลับของคุณ</p>
+            <a href="https://forms.gle/jrjkAYQMzNxTZKn5A" target="_blank">Click here to provide feedback</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
