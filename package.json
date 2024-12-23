@@ -1,0 +1,16 @@
+{
+  "name": "startup-project",
+  "version": "1.0.0",
+  "description": "My startup project",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5"
+  }
+}
