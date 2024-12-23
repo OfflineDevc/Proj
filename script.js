@@ -50,7 +50,7 @@ function sendMessage() {
     const userInput = document.getElementById('userInput').value.trim();
     if (userInput === '') return;
 
-    displayMessage(userInput, 'user');
+    displayMessage(userInput, 'user'); // Display user message
     document.getElementById('userInput').value = '';
 
     // Add a typing indicator in the chat
@@ -67,12 +67,16 @@ function sendMessage() {
     .then(data => {
         // Remove the typing indicator before displaying the bot's message
         removeTypingIndicator(typingElement);
-        displayMessage(data.reply, 'bot'); // Ensure this is the only call
+
+        // Check if the reply is already shown, prevent duplicate
+        if (!document.querySelector('.message.bot p')) {
+            displayMessage(data.reply, 'bot'); // Display bot's reply
+        }
     })
     .catch(error => {
         console.error('Error:', error);
         removeTypingIndicator(typingElement);
-        displayMessage('ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง.', 'bot'); // Ensure this is the only call
+        displayMessage('ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง.', 'bot');
     });
 }
 
@@ -114,7 +118,6 @@ function displayMessage(message, sender) {
         type();
     }
 }
-
 
 // Function to add a typing indicator
 function addTypingIndicator() {
